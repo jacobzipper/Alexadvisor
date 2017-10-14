@@ -1,11 +1,13 @@
 'use strict';
+var credentials = {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: "us-east-1"
+};
 module.change_code = 1;
 var _ = require('lodash');
 var CAKEBAKER_DATA_TABLE_NAME = 'cakeBakerData';
 var dynasty = require('dynasty')({});
-
-var localDynasty = require('dynasty')(localCredentials, localUrl);
-var dynasty = localDynasty;
 
 function CakeBakerHelper() {}
 var cakeBakerTable = function() {
