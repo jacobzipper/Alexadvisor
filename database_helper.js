@@ -14,30 +14,45 @@ var portfolioTable = function() {
   return dynasty.table(PORTFOLIOTABLE);
 };
 
-PortfolioManagerHelper.prototype.createCakeBakerTable = function() {
-  return dynasty.describe(PORTFOLIOTABLE)
-    .catch(function(error) {
-      return dynasty.create(PORTFOLIOTABLE, {
-        key_schema: {
-          hash: ['userId', 'string']
-        }
-      });
-    });
-};
-
-PortfolioManagerHelper.prototype.storeCakeBakerData = function(userId, cakeBakerData) {
-  return portfolioTable().insert({
+PortfolioManagerHelper.prototype.init = function(userId) {
+  portfolioTable().insert({
     userId: userId,
-    data: cakeBakerData
+    data: {
+      portfolio: {}
+    }
   }).catch(function(error) {
     console.log(error);
   });
+
 };
 
-PortfolioManagerHelper.prototype.readCakeBakerData = function(userId) {
+PortfolioManagerHelper.prototype.addStock = function(userId, numShares, ticker) {
+    var portfolioCopy = this.getPortfolio();
+    var stocks = Object.keys(portfolioCopy);
+    if(stocks.indexOf(ticker) != -1) {
+      portfolioCopy[ticker] += parseInt(numShares);
+      portfolioTable().update(userId, {
+        portfolio: portfolioCopy
+      })
+      .then(function(resp) {
+        console.log(resp);
+      });
+    }
+    else {
+      portfolioCopy[ticker] = parseInt(numShares);
+      portfolioTable().update(userId, {
+        portfolio: portfolioCopy
+      })
+      .then(function(resp) {
+        console.log(resp);
+      });
+    }
+};
+
+PortfolioManagerHelper.prototype.getPortfolio = function(userId) {
   return portfolioTable().find(userId)
     .then(function(result) {
-      return result;
+      return result.portfolio;
     })
     .catch(function(error) {
       console.log(error);
