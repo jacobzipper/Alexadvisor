@@ -6,18 +6,18 @@ var credentials = {
 };
 module.change_code = 1;
 var _ = require('lodash');
-var CAKEBAKER_DATA_TABLE_NAME = 'cakeBakerData';
-var dynasty = require('dynasty')({});
+var PORTFOLIOTABLE = 'PortfolioTable';
+var dynasty = require('dynasty')(credentials);
 
-function CakeBakerHelper() {}
-var cakeBakerTable = function() {
-  return dynasty.table(CAKEBAKER_DATA_TABLE_NAME);
+function PortfolioManagerHelper() {}
+var portfolioTable = function() {
+  return dynasty.table(PORTFOLIOTABLE);
 };
 
-CakeBakerHelper.prototype.createCakeBakerTable = function() {
-  return dynasty.describe(CAKEBAKER_DATA_TABLE_NAME)
+PortfolioManagerHelper.prototype.createCakeBakerTable = function() {
+  return dynasty.describe(PORTFOLIOTABLE)
     .catch(function(error) {
-      return dynasty.create(CAKEBAKER_DATA_TABLE_NAME, {
+      return dynasty.create(PORTFOLIOTABLE, {
         key_schema: {
           hash: ['userId', 'string']
         }
@@ -25,8 +25,8 @@ CakeBakerHelper.prototype.createCakeBakerTable = function() {
     });
 };
 
-CakeBakerHelper.prototype.storeCakeBakerData = function(userId, cakeBakerData) {
-  return cakeBakerTable().insert({
+PortfolioManagerHelper.prototype.storeCakeBakerData = function(userId, cakeBakerData) {
+  return portfolioTable().insert({
     userId: userId,
     data: cakeBakerData
   }).catch(function(error) {
@@ -34,8 +34,8 @@ CakeBakerHelper.prototype.storeCakeBakerData = function(userId, cakeBakerData) {
   });
 };
 
-CakeBakerHelper.prototype.readCakeBakerData = function(userId) {
-  return cakeBakerTable().find(userId)
+PortfolioManagerHelper.prototype.readCakeBakerData = function(userId) {
+  return portfolioTable().find(userId)
     .then(function(result) {
       return result;
     })
@@ -44,4 +44,4 @@ CakeBakerHelper.prototype.readCakeBakerData = function(userId) {
     });
 };
 
-module.exports = CakeBakerHelper;
+module.exports = PortfolioManagerHelper;
